@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/signup.css">
+</head>
+<body>
+    <div class="registration-container">
+        <div class="registration-header">
+            <h1 class="registration-title">Регистрация</h1>
+            <p class="registration-subtitle">Создайте новую учетную запись</p>
+        </div>
+
+        <form action="/register" method="POST" id="registrationForm">
+            <div class="form-group">
+                <label for="company" class="form-label">Название фирмы</label>
+                <input
+                    type="text"
+                    id="company_name"
+                    name="company_name"
+                    class="form-input"
+                    placeholder="Введите название вашей фирмы"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="username" class="form-label">Логин</label>
+                <input
+                    type="text"
+                    id="login"
+                    name="login"
+                    class="form-input"
+                    placeholder="Придумайте логин"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Пароль</label>
+                <div class="password-group">
+                  <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      class="form-input"
+                      placeholder="Придумайте пароль"
+                      required
+                  >
+                  <button type="button" class="visible-button" id="password-visible-button">&#x1F441</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password" class="form-label">Подтверждение пароля</label>
+                <div class="password-group">
+                  <input
+                      type="password"
+                      id="confirm-password"
+                      name="confirm-password"
+                      class="form-input"
+                      placeholder="Повторите пароль"
+                      required
+                  >
+                  <button type="button" class="visible-button" id="confirm-password-visible-button">&#x1F441</button>
+                </div>
+                <div class="password-match" id="passwordMatchMessage">
+                    Пароли не совпадают
+                </div>
+            </div>
+
+            <button type="submit" class="registration-button" id="submitButton">Зарегистрироваться</button>
+
+            <div class="form-footer">
+                <a href="/login" class="login-link">Уже есть аккаунт? Войти</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+            const submitButton = document.getElementById('submitButton');
+            const passwordVisibleButton = document.getElementById('password-visible-button');
+            const confirmPasswordVisibleButton = document.getElementById('confirm-password-visible-button');
+
+            // Функция проверки совпадения паролей
+            function checkPasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (password && confirmPassword && password !== confirmPassword) {
+                    passwordMatchMessage.classList.add('visible');
+                    confirmPasswordInput.style.borderColor = '#ff6b6b';
+                    submitButton.disabled = true;
+                } else {
+                    passwordMatchMessage.classList.remove('visible');
+                    confirmPasswordInput.style.borderColor = password && confirmPassword ? '#3AAACF' : '#216278';
+                    submitButton.disabled = false;
+                }
+            }
+
+            // Обработчики событий для полей паролей
+            passwordInput.addEventListener('input', checkPasswordMatch);
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+            // Функция добавления видимости полям паролей
+            function setPasswordVisible(e){
+              e.preventDefault();
+              if (e.target === passwordVisibleButton) {
+                if (passwordInput.type === "text") passwordInput.type = "password";
+                else passwordInput.type = "text";
+              } else if (e.target === confirmPasswordVisibleButton) {
+                if (confirmPasswordInput.type === "text") confirmPasswordInput.type = "password";
+                else confirmPasswordInput.type = "text";
+              }
+            }
+
+            // Обработчики событий для кнопок видимости
+            passwordVisibleButton.addEventListener('click', setPasswordVisible);
+            confirmPasswordVisibleButton.addEventListener('click', setPasswordVisible);
+
+            // Обработка отправки формы
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Проверка совпадения паролей перед отправкой
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    passwordMatchMessage.classList.add('visible');
+                    confirmPasswordInput.focus();
+                    return;
+                }
+
+                // Сбор данных формы
+                const formData = {
+                    company: document.getElementById('company').value,
+                    username: document.getElementById('username').value,
+                    password: passwordInput.value
+                };
+
+                console.log('Данные формы:', formData);
+
+                // Здесь можно добавить AJAX запрос на сервер
+                // fetch('/register', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(formData)
+                // })
+
+                // Для демонстрации просто показываем alert
+                alert('Регистрация прошла успешно! В реальном приложении здесь будет перенаправление или AJAX запрос.');
+            });
+        });
+    </script>
+</body>
+</html>

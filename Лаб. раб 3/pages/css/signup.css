@@ -1,0 +1,224 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #3AAACF 0%, #61B4CF 100%);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.registration-container {
+    background: #024E68;
+    border-radius: 10px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+.registration-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.registration-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.registration-subtitle {
+    color: #61B4CF;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+.password-group{
+  display: flex;
+}
+.form-label {
+    display: block;
+    color: white;
+    margin-bottom: 8px;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #216278;
+    border-radius: 5px;
+    background: #06799F;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3AAACF;
+    background: #024E68;
+}
+
+.form-input::placeholder {
+    color: #61B4CF;
+}
+
+.password-match {
+    display: none;
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+.password-match.visible{
+  display: block;
+}
+.registration-button {
+    background: linear-gradient(135deg, #3AAACF 0%, #06799F 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 30px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    float: right;
+    min-width: 120px;
+}
+
+.registration-button:hover {
+    background: linear-gradient(135deg, #06799F 0%, #3AAACF 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.registration-button:active {
+    transform: translateY(0);
+}
+
+.registration-button:disabled {
+    background: #216278;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.visible-button {
+    background: linear-gradient(135deg, #3AAACF 0%, #06799F 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 30px;
+    text:center;
+}
+
+.visible-button:hover {
+    background: linear-gradient(135deg, #06799F 0%, #3AAACF 100%);
+}
+
+.visible-button:disabled {
+    background: #216278;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.form-footer {
+    clear: both;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.login-link {
+    color: #61B4CF;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.login-link:hover {
+    color: #3AAACF;
+    text-decoration: underline;
+}
+
+/* Адаптивность для планшетов */
+@media (max-width: 768px) {
+    .registration-container {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+
+    .registration-title {
+        font-size: 1.7rem;
+    }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .registration-container {
+        padding: 25px 15px;
+        margin: 10px;
+    }
+
+    .registration-title {
+        font-size: 1.5rem;
+    }
+
+    .registration-button {
+        width: 100%;
+        float: none;
+        margin-top: 10px;
+    }
+
+    .form-input {
+        padding: 12px;
+    }
+}
+
+/* Дополнительные стили для улучшения UX */
+/*.form-group:focus-within .form-label {
+    color: #3AAACF;
+}*/
+
+/* Анимация появления */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.registration-container {
+    animation: fadeInUp 0.6s ease-out;
+}

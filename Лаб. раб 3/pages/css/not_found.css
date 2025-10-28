@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #3AAACF 0%, #61B4CF 100%);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.container {
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-text {
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    margin-bottom: 30px;
+}
+
+.home-link {
+    display: inline-block;
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    padding: 12px 24px;
+    border: 2px solid white;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 40px;
+}
+
+.home-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.footer {
+    text-align: center;
+    color: white;
+    padding: 20px;
+    font-size: 1rem;
+    opacity: 0.8;
+    width: 100%;
+}
+
+.company-name {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .error-text {
+        font-size: clamp(1.5rem, 6vw, 3rem);
+    }
+
+    .home-link {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .footer {
+        font-size: 0.9rem;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .error-text {
+        font-size: clamp(1.2rem, 5vw, 2.5rem);
+    }
+
+    .footer {
+        font-size: 0.8rem;
+        padding: 10px;
+    }
+}
