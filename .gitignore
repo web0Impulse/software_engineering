@@ -2,3 +2,6 @@ __pycache__/
 *.ppt*
 *.doc*
 *.xls*
+*.png
+*.mdj
+node_modules/
