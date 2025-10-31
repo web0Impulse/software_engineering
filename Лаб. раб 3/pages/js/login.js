@@ -43,15 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then((response) => {
           return response.json();
         })
-        .then((data) => {
-            if (data.status == 404) {
+        .then((json) => {
+          if (json.status != 200) {
             errorDiv.classList.add('visible');
-            errorDiv.innerText = data.message;
-          } else if (data.status == 500) {
-            errorDiv.classList.add('visible');
-            errorDiv.innerText = "Ошибка сервера. Попробуйте позже";
+            errorDiv.innerText = json.message;
           } else {
-            console.log(data);
+            console.log(json.data);
           }
         });
     });
