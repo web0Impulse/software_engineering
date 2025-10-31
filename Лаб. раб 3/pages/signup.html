@@ -15,8 +15,11 @@
         </div>
 
         <form action="/register" method="POST" id="registrationForm">
+            <div class="db-error" id="dbError">
+                {{ dbError }}
+            </div>
             <div class="form-group">
-                <label for="company" class="form-label">Название фирмы</label>
+                <label for="company" class="form-label">Название компании</label>
                 <input
                     type="text"
                     id="company_name"
