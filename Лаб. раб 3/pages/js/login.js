@@ -47,8 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
           if (json.status != 200) {
             errorDiv.classList.add('visible');
             errorDiv.innerText = json.message;
-          } else {
-            console.log(json.data);
+          } else if (json.status == 200) {
+            errorDiv.classList.remove('visible');
+            errorDiv.innerText = "";
+            window.location.href = "/";
           }
         });
     });
