@@ -1,11 +1,11 @@
-// контроллер Пользователя
+// контроллер Компании
 // TODO: Добавить валидацию
 import { Company } from "../models/company_model.js";
 import { databaseErrorHandler } from "../handlers/error_handler.js";
 import crypto from "crypto";
 
 export class CompanyController {
-  // Метод создания пользователя
+  // Метод создания компании
   static async create (request, response) {
     // Считывание данных
     let companyData = request.body;
@@ -15,7 +15,7 @@ export class CompanyController {
       .digest("hex");
     // Внесение нового пользователя в БД
     // TODO: вернуть токен или сессию
-    const company = structuredClone(Company);
+    const company = new Company();
     company.create({
         name: companyData.company_name,
         login: companyData.login,
@@ -40,7 +40,7 @@ export class CompanyController {
       .digest("hex");
     // Ищем компанию
     // TODO: вернуть токен или сессию
-    const company = structuredClone(Company);
+    const company = new Company();
     company.getAll("WHERE login = ? AND password = ?", [data.login, passwordHash])
         .then((result) => {
             return response.status(200).json({
