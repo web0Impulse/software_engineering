@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById('submitButton');
     const passwordVisibleButton = document.getElementById('password-visible-button');
     const confirmPasswordVisibleButton = document.getElementById('confirm-password-visible-button');
+    const errorDiv = document.getElementById('dbError');
 
     // Функция проверки совпадения паролей
     function checkPasswordMatch() {
@@ -56,23 +57,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Сбор данных формы
         const formData = {
-            company: document.getElementById('company').value,
-            username: document.getElementById('username').value,
+            company_name: document.getElementById('company_name').value,
+            login: document.getElementById('login').value,
             password: passwordInput.value
         };
+        fetch('/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        }).then((response) => {
+          return response.json();
+        }).then((json) => {
+          if (json.status != 201) {
+            errorDiv.classList.add('visible');
+            errorDiv.innerText = json.message;
+          } else {
+            errorDiv.classList.remove('visible');
+            errorDiv.innerText = "";
+            window.location.href = "/";
+          }
+        });
 
-        console.log('Данные формы:', formData);
-
-        // Здесь можно добавить AJAX запрос на сервер
-        // fetch('/register', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(formData)
-        // })
-
-        // Для демонстрации просто показываем alert
-        alert('Регистрация прошла успешно! В реальном приложении здесь будет перенаправление или AJAX запрос.');
     });
 });
