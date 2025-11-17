@@ -79,13 +79,13 @@ body {
     color: #61B4CF;
 }
 
-.password-match {
+.password-match, .db-error {
     display: none;
     color: #ff6b6b;
     font-size: 0.8rem;
     margin-top: 5px;
 }
-.password-match.visible{
+.password-match.visible, .db-error.visible{
   display: block;
 }
 .registration-button {
