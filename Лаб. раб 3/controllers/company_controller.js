@@ -1,7 +1,7 @@
 // контроллер Компании
 // TODO: Добавить валидацию
 import { Company } from "../models/company_model.js";
-import { databaseErrorHandler } from "../handlers/error_handler.js";
+import { databaseErrorHandler, DB_ERR_CODES } from "../handlers/error_handler.js";
 import crypto from "crypto";
 
 export class CompanyController {
@@ -41,12 +41,21 @@ export class CompanyController {
     // Ищем компанию
     // TODO: вернуть токен или сессию
     const company = new Company();
-    company.getAll("WHERE login = ? AND password = ?", [data.login, passwordHash])
+    company.getAll("WHERE login = ? AND password_hash = ?", [data.login, passwordHash])
         .then((result) => {
-            return response.status(200).json({
-                status: 200,
-                data: result[0]
-            })
+            if (result[0]) {
+              return response
+                .status(200)
+                .json({
+                  status: 200,
+                  data: result[0]
+                });
+            } else {
+              throw {
+                code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                message: "Неверный логин или пароль",
+              }
+            }
         })
         .catch(err => {
             databaseErrorHandler(err, response);
