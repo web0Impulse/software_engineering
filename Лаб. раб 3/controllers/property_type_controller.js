@@ -1,0 +1,152 @@
+// контроллер Имущества
+// TODO: Добавить валидацию
+import { PropertyType } from "../models/property_type_model.js";
+import { databaseErrorHandler, DB_ERR_CODES } from "../handlers/error_handler.js";
+import { validationResult } from "express-validator";
+import { validationErrorHandler } from "../handlers/validation_errors_handler.js";
+
+export class PropertyTypeController {
+  static async get(request, response) {
+    // Проверка ошибок валидации
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return validationErrorHandler({
+            status: 400,
+            message: "Ошибка в запросе",
+            errors: errors.array(),
+        }, response);
+    }
+    const propertyTypeId = request.params["id"];
+    const propertyType = new PropertyType();
+    propertyType.getAll("WHERE id = ?", [propertyTypeId])
+        .then((result) => {
+            return response
+                .status(200)
+                .json({
+                    status: 200,
+                    data: result[0] || {}
+                });
+            })
+        .catch(err => {
+            databaseErrorHandler(err, response);
+        })
+  }
+
+  static async create(request, response) {
+    // Проверка ошибок валидации
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return validationErrorHandler({
+            status: 400,
+            message: "Ошибка в запросе",
+            errors: errors.array(),
+        }, response);
+    }
+
+    // Считывание данных
+    const propertyTypeData = request.body;
+    // Внесение propertyType в БД
+    // TODO: добавить проверку по parent_id
+    const propertyType = new PropertyType();
+    propertyType.create({
+        name: propertyTypeData.name,
+        parent_id: propertyTypeData.parent_id || null,
+    }).then((result) => {
+        response.status(201).json({
+            status: 201,
+            data: result,
+        })
+    }).catch(err => {
+        databaseErrorHandler(err, response);
+    });
+  }
+
+  static async update(request, response) {
+    // Проверка ошибок валидации
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return validationErrorHandler({
+            status: 400,
+            message: "Ошибка в запросе",
+            errors: errors.array(),
+        }, response);
+    }
+    // Считывание данных
+    const requestData = request.body;
+    const updPropTypeObj = {};
+    if (requestData.name) {
+        updPropTypeObj.name = requestData.name;
+    }
+    if (requestData.parent_id) {
+        updPropTypeObj.parent_id = requestData.parent_id;
+    }
+    if (requestData.created_at) {
+        updPropTypeObj.created_at = requestData.created_at;
+    }
+    if (requestData.updated_at) {
+        updPropTypeObj.updated_at = requestData.updated_at;
+    }
+    // Запись изменений в БД
+    // TODO: добавить проверку по parent_id
+    const propertyType = new PropertyType();
+    propertyType.getAll("WHERE id = ?", request.params["id"])
+        .then(() => {
+            if (!propertyType.values.length) {
+                throw {
+                    code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                    message: "Типа имущества с таким ID не найдено",
+                }
+            }
+            
+            propertyType.update(updPropTypeObj)
+                .then(() => {
+                    propertyType.getAll("WHERE id = ?", request.params["id"])
+                        .then((result) => {
+                            return response
+                                .status(200)
+                                .json({
+                                    status:200,
+                                    data: result[0]
+                                })
+                        })
+                })
+        })
+        .catch((err) => {
+            console.log(err);
+            databaseErrorHandler(err, response);
+        });
+  }
+
+  static async delete(request, response) {
+    // Проверка ошибок валидации
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return validationErrorHandler({
+            status: 400,
+            message: "Ошибка в запросе",
+            errors: errors.array(),
+        }, response);
+    }
+    const propertyType = new PropertyType();
+    propertyType.getAll("WHERE id = ?", request.params["id"])
+        .then(() => {
+            if (!propertyType.values.length) {
+                throw {
+                    code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                    message: "Типа имущества с таким ID не найдено",
+                }
+            }
+            propertyType.deleteValues()
+                .then(() => {
+                    return response
+                        .status(204)
+                        .json({
+                            status: 204
+                        })
+                })
+        })
+        .catch(err => {
+            databaseErrorHandler(err, response);
+        });
+  }
+}
