@@ -6,6 +6,7 @@ import { dirname, join } from 'path';
 import { CompanyController } from "./controllers/company_controller.js";
 import { PropertyController } from "./controllers/property_controller.js";
 import { ShipController } from "./controllers/ship_controller.js";
+import { PropertyTypeController } from "./controllers/property_type_controller.js";
 
 // TODO: Добавить валидацию
 
@@ -44,25 +45,61 @@ app.get("/api/ship/:id", [
 ], ShipController.get);
 app.post("/api/ship", jsonParser, [
   body("name")
-    .notEmpty().withMessage("Имя корабля обязательно")
-    .isLength({ max: 50 }).withMessage("Имя корабля должно быть не более 50 символов"),
+    .notEmpty().withMessage("name обязательно")
+    .isLength({ max: 50 }).withMessage("name должно быть не более 50 символов"),
   body("company_id")
+    .notEmpty().withMessage("company_id должно быть числом")
     .isInt().withMessage("Company_ID должен быть числом")
 ], ShipController.create);
 app.post("/api/ship/:id", jsonParser, [
   param("id").isInt().withMessage("ID должен быть числом"),
   body("name")
+    .optional()
     .isLength({ max: 50 }).withMessage("name должно быть не более 50 символов"),
   body("company_id")
+    .optional()
     .isInt().withMessage("company_id должен быть числом"),
   body("created_at")
+    .optional()
     .isDate().withMessage("created_at должно быть датой"),
   body("updated_at")
+    .optional()
     .isDate().withMessage("updated_at должно быть датой")  
 ], ShipController.update);
 app.delete("/api/ship/:id", [
   param("id").isInt().withMessage("ID должен быть числом"),
 ], ShipController.delete);
+
+// api property type route
+app.get("/api/propertyType/:id", [
+  param('id').isInt().withMessage("ID должен быть числом"),
+], PropertyTypeController.get);
+app.post("/api/propertyType", jsonParser, [
+  body("name")
+    .notEmpty().withMessage("name обязательно")
+    .isLength({ max: 50 }).withMessage("name должно быть не более 50 символов"),
+  body("parent_id")
+    .optional()
+    .isInt().withMessage("parent_id должен быть числом")
+], PropertyTypeController.create);
+app.post("/api/propertyType/:id", jsonParser, [
+  param("id").isInt().withMessage("ID должен быть числом"),
+  body("name")
+    .optional()
+    .isLength({ max: 50 }).withMessage("name должно быть не более 50 символов"),
+  body("parent_id")
+    .optional()
+    .isInt().withMessage("parent_id должен быть числом"),
+  body("created_at")
+    .optional()
+    .isDate().withMessage("created_at должно быть датой"),
+  body("updated_at")
+    .optional()
+    .isDate().withMessage("updated_at должно быть датой")  
+], PropertyTypeController.update);
+app.delete("/api/propertyType/:id", [
+  param("id").isInt().withMessage("ID должен быть числом"),
+], PropertyTypeController.delete);
 
 // ответ по умолчанию
 app.get("/*", function(request, response){
