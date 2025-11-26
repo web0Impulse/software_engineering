@@ -90,7 +90,11 @@ export class ModelBase {
   #generateWhere(modelValue) {
     let sql = "WHERE ";
     Object.keys(modelValue).forEach((item) => {
-      sql += `${item} = '${modelValue[item]}' AND `;
+      if (modelValue[item] == null) {
+        sql += `${item} is NULL AND `;
+      } else {
+        sql += `${item} = '${modelValue[item]}' AND `;
+      }
     });
     return sql.slice(0, sql.length - 4);
   }
