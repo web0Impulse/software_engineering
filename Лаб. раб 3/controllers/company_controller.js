@@ -14,13 +14,13 @@ export class CompanyController {
       .update(companyData.password)
       .digest("hex");
     // Внесение нового пользователя в БД
-    // TODO: вернуть токен или сессию
     const company = new Company();
     company.create({
         name: companyData.company_name,
         login: companyData.login,
         password_hash: passwordHash,
     }).then((result) => {
+        request.session.user = result;
         response.status(201).json({
             status: 201,
             data: result,
@@ -39,11 +39,11 @@ export class CompanyController {
       .update(data.password)
       .digest("hex");
     // Ищем компанию
-    // TODO: вернуть токен или сессию
     const company = new Company();
     company.getAll("WHERE login = ? AND password_hash = ?", [data.login, passwordHash])
         .then((result) => {
             if (result[0]) {
+              request.session.user = result[0];
               return response
                 .status(200)
                 .json({
