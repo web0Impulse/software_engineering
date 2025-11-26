@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             login: loginInput.value,
             password: passwordInput.value
         };
-        fetch('/login', {
+        fetch('/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
