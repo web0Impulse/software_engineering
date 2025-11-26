@@ -1,4 +1,5 @@
 import express, { application } from "express"; // подключение express
+import session from "express-session"; // подключение express сессий
 import { body, param } from "express-validator"; // Подключение express-validator
 import { MySQL_CONNECTION } from "./sql_connection.js"; // импорт подключения к бд
 import { fileURLToPath } from 'url';
@@ -7,6 +8,7 @@ import { CompanyController } from "./controllers/company_controller.js";
 import { PropertyController } from "./controllers/property_controller.js";
 import { ShipController } from "./controllers/ship_controller.js";
 import { PropertyTypeController } from "./controllers/property_type_controller.js";
+import { checkAuth } from "./middleware/auth.js";
 
 // TODO: Добавить валидацию
 
@@ -18,9 +20,17 @@ const jsonParser = express.json();
 
 // Настройка статических файлов css, js
 app.use(express.static(__dirname + '/pages'));
+// Настройка сессий
+app.use(session({
+  secret: 'uha870y7rehunjadfs7uyh', // секрет для подписи сессий
+  resave: false, // не сохранять сессию, если она не изменилась
+  saveUninitialized: false, // не сохранять "пустую" сессию
+  cookie: { maxAge: 36 * 60 * 60 * 1000 } // время жизни cookie (36 часов)
+}));
+
 
 // определяем обработчик для главной страницы
-app.get("/", function(request, response){
+app.get("/", checkAuth, function(request, response){
     response.sendFile(__dirname + "/pages/main.html");
 });
 
