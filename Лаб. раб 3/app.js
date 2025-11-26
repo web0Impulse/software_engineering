@@ -27,10 +27,11 @@ app.use(session({
   saveUninitialized: false, // не сохранять "пустую" сессию
   cookie: { maxAge: 36 * 60 * 60 * 1000 } // время жизни cookie (36 часов)
 }));
+app.use(checkAuth);
 
 
 // определяем обработчик для главной страницы
-app.get("/", checkAuth, function(request, response){
+app.get("/", function(request, response){
     response.sendFile(__dirname + "/pages/main.html");
 });
 
@@ -41,7 +42,7 @@ app.get("/", checkAuth, function(request, response){
 app.get("/login", function(request, response){
     response.sendFile(__dirname + "/pages/login.html");
 });
-app.post("/login", jsonParser, CompanyController.login);
+app.post("/api/login", jsonParser, CompanyController.login);
 
 // определяем обработчик для маршрута регистрации
 app.get("/signup", function(request, response){
