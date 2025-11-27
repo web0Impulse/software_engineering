@@ -50,6 +50,8 @@ app.get("/signup", function(request, response){
 });
 app.post("/signup", jsonParser, CompanyController.create);
 
+app.post("/api/logout", CompanyController.logout);
+
 // api ship route
 app.get("/api/ship/:id", [
   param('id').isInt().withMessage("ID должен быть числом"),
