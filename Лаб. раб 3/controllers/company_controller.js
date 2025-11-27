@@ -61,4 +61,16 @@ export class CompanyController {
             databaseErrorHandler(err, response);
         });
   }
+
+  // Метод выхода
+  static async logout (request, response) {
+    req.session.destroy(err => {
+      if (err) {
+        databaseErrorHandler(err, response)
+      }
+      return response
+        .status(200)
+        .json({});
+    });
+  }
 }
