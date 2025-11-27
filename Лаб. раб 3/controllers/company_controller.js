@@ -64,13 +64,13 @@ export class CompanyController {
 
   // Метод выхода
   static async logout (request, response) {
-    req.session.destroy(err => {
+    request.session.destroy(err => {
       if (err) {
         databaseErrorHandler(err, response)
       }
-      return response
-        .status(200)
-        .json({});
+      return response.status(200).json({
+        status: 200
+      });
     });
   }
 }
