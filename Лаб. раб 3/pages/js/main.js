@@ -1,6 +1,3 @@
-// Commit notes
-// 1) Скрипты главной страницы
-
 // Установка текущей даты
 document.addEventListener('DOMContentLoaded', function() {
     const now = new Date();
@@ -74,4 +71,25 @@ document.addEventListener('DOMContentLoaded', function() {
             goButton.click();
         }
     });
+
+    // Обработка нажатия на кнопку выхода
+    const logoutButton = document.getElementById("logoutButton");
+    logoutButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then((response) => {
+            return response.json();
+        })
+        .then((json) => {
+          if (json.status != 200) {
+            console.log(json.message);
+          } else {
+            window.location.href = '/login';
+          }
+        });
+    })
 });
