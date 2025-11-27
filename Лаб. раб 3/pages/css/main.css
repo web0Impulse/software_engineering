@@ -48,6 +48,13 @@ body {
     margin-bottom: 30px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+.instrumental-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px 5px 20px;
+    margin-bottom: 10px;
+    gap:10px;
+}
 
 .search-form {
     display: flex;
@@ -104,6 +111,24 @@ body {
     background: linear-gradient(135deg, #06799F 0%, #3AAACF 100%);
     transform: translateY(-2px);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.add-property-button {
+    background: linear-gradient(135deg, #3acf67 0%, #069f53 100%);
+}
+
+.add-property-button:hover {
+    background: linear-gradient(135deg, #069f53 0%, #3acf67 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logout-button {
+    background: linear-gradient(135deg, #cf3a3a 0%, #9f0606 100%);
+}
+
+.logout-button:hover {
+    background: linear-gradient(135deg, #9f0606 0%, #cf3a3a 100%);
 }
 
 .table-section {
@@ -278,7 +303,10 @@ tr:hover {
     .page-subtitle {
         font-size: 1rem;
     }
-
+    .instrumental-panel {
+        flex-direction: column;
+        gap:10px;
+    }
     .table-container {
         padding: 10px;
     }
