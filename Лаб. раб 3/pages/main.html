@@ -8,6 +8,79 @@
     <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
+    <!-- Модальное окно -->
+    <div id="assetModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <form id="assetForm">
+            <!-- Наименование -->
+            <div class="form-group">
+                <label for="name">Наименование</label>
+                <input type="text" class="modal-input" id="name" name="name" required>
+            </div>
+
+            <!-- Тип -->
+            <div class="form-group">
+                <label for="type">Тип</label>
+                <select id="type" name="type" class="modal-input" required>
+                    <option value="" disabled selected>Выберите тип</option>
+                    <option value="тип1">Тип 1</option>
+                    <option value="тип2">Тип 2</option>
+                    <option value="тип3">Тип 3</option>
+                <!-- Дополнительные типы по необходимости -->
+                </select>
+            </div>
+
+            <!-- Количество -->
+            <div class="form-group">
+                <label for="quantity">Кол-во</label>
+                <input type="number" class="modal-input" id="quantity" name="quantity" min="1" required>
+            </div>
+
+            <!-- Расположение -->
+            <div class="form-group">
+                <label for="location">Расположение</label>
+                <textarea id="location" class="modal-input" name="location" maxlength="250" rows="3" required></textarea>
+            </div>
+
+            <!-- Дата проверки -->
+            <div class="form-group">
+                <label for="inspectionDate">Дата проверки</label>
+                <input type="date" class="modal-input" id="inspectionDate" name="inspectionDate" required>
+            </div>
+
+            <!-- Отметка о выполнении -->
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="completed" name="completed">
+                <label for="completed">Отметка о выполнении</label>
+            </div>
+
+            <!-- Периодичность проверки -->
+            <div class="form-group">
+                <label for="period">Периодичность проверки</label>
+                <select class="modal-input" id="period" name="period" required>
+                    <option value="" disabled selected>Выберите период</option>
+                    <option value="6_months">6 месяцев</option>
+                    <option value="1_year">1 год</option>
+                    <option value="2_years">2 года</option>
+                    <option value="6_years">6 лет</option>
+                </select>
+            </div>
+
+            <!-- Результат -->
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="result" name="result">
+                <label for="result">Результат</label>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="form-actions">
+                <button type="submit" class="go-button add-property-button" id="savePropertyButton">Добавить</button>
+                <button type="button" class="go-button logout-button" id="cancelButton">Отмена</button>
+            </div>
+            </form>
+        </div>
+    </div>
     <div class="container">
         <div class="header">
             <h1 class="page-title" id="pageTitle">Освидетельствование имущества</h1>
