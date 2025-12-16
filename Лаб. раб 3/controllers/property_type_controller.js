@@ -18,7 +18,7 @@ export class PropertyTypeController {
     }
     const propertyTypeId = request.params["id"];
     const propertyType = new PropertyType();
-    propertyType.getAll("WHERE id = ?", [propertyTypeId])
+    propertyType.getAll("WHERE id = ? AND company_id = ?", [propertyTypeId, request.session.user.id])
         .then((result) => {
             return response
                 .status(200)
