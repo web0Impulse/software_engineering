@@ -43,6 +43,16 @@ export class CompanyController {
 
   // Метод входа
   static async login(request, response) {
+    // Проверка ошибок валидации
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return validationErrorHandler({
+        status: 400,
+        message: "Ошибка в запросе",
+        errors: errors.array(),
+      }, response);
+    }
+
     // Извлекаем данные
     const data = request.body;
     // Хэшируем пароль
