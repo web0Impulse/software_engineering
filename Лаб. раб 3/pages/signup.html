@@ -14,7 +14,7 @@
             <p class="registration-subtitle">Создайте новую учетную запись</p>
         </div>
 
-        <form action="/register" method="POST" id="registrationForm">
+        <form action="/api/signup" method="POST" id="registrationForm">
             <div class="db-error" id="dbError">
                 {{ dbError }}
             </div>
@@ -22,10 +22,11 @@
                 <label for="company" class="form-label">Название компании</label>
                 <input
                     type="text"
-                    id="company_name"
+                    id="company-name"
                     name="company_name"
                     class="form-input"
                     placeholder="Введите название вашей фирмы"
+                    maxlength="50"
                     required
                 >
             </div>
@@ -38,6 +39,7 @@
                     name="login"
                     class="form-input"
                     placeholder="Придумайте логин"
+                    maxlength="50"
                     required
                 >
             </div>
