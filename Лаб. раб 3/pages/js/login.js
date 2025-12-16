@@ -27,12 +27,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработка отправки формы
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        //Обнуление ошибок
+        errorDiv.classList.remove('visible');
+        errorDiv.innerHTML = "";
         // Сбор данных формы
-        const loginInput = document.getElementById('login');
-        const passwordInput = document.getElementById('password');
+        const login = document.getElementById('login').value;
+        const password = document.getElementById('password').value;
+        // Проверка на пустые значения
+        if (login == "") {
+          errorDiv.classList.add('visible');
+          errorDiv.innerHTML = "<p>Логин не может быть пустым</p>";
+          return;
+        }
+        if (password == "") {
+          errorDiv.classList.add('visible');
+          errorDiv.innerHTML = "<p>Пароль не может быть пустым</p>";
+          return;
+        }
+        // Отправка запроса
         const formData = {
-            login: loginInput.value,
-            password: passwordInput.value
+            login: login,
+            password: password
         };
         fetch('/api/login', {
             method: 'POST',
@@ -46,10 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
         .then((json) => {
           if (json.status != 200) {
             errorDiv.classList.add('visible');
-            errorDiv.innerText = json.message;
+            errorDiv.innerHTML = json.message;
           } else if (json.status == 200) {
             errorDiv.classList.remove('visible');
-            errorDiv.innerText = "";
+            errorDiv.innerHTML = "";
             window.location.href = "/";
           }
         });
