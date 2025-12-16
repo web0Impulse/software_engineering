@@ -19,7 +19,7 @@ export class ShipController {
         }
         const shipId = request.params["id"];
         const ship = new Ship();
-        ship.getAll("WHERE id = ?", [shipId])
+        ship.getAll("WHERE id = ? AND company_id = ?", [shipId, request.session.user.id])
             .then((result) => {
                 return response
                     .status(200)
@@ -49,12 +49,10 @@ export class ShipController {
     // Считывание данных
     const shipData = request.body;
     // Внесение нового корябля в БД
-    // TODO: вернуть токен или сессию
-    // TODO: добавить проверку по company_id
     const ship = new Ship();
     ship.create({
         name: shipData.name,
-        company_id: shipData.company_id,
+        company_id: request.session.user.id,
     }).then((result) => {
         response.status(201).json({
             status: 201,
