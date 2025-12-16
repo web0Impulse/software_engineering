@@ -120,7 +120,7 @@ export class ShipController {
             }, response);
         }
     const ship = new Ship();
-    ship.getAll("WHERE id = ?", request.params["id"])
+    ship.getAll("WHERE id = ? AND company_id = ?", [request.params["id"], request.session.user.id])
         .then(() => {
             if (!ship.values.length) {
                 throw {
