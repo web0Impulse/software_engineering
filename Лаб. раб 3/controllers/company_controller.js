@@ -3,10 +3,21 @@
 import { Company } from "../models/company_model.js";
 import { databaseErrorHandler, DB_ERR_CODES } from "../handlers/error_handler.js";
 import crypto from "crypto";
+import { validationResult } from "express-validator";
+import { validationErrorHandler } from "../handlers/validation_errors_handler.js";
 
 export class CompanyController {
   // Метод создания компании
   static async create (request, response) {
+    // Проверка ошибок валидации
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return validationErrorHandler({
+        status: 400,
+        message: "Ошибка в запросе",
+        errors: errors.array(),
+      }, response);
+    }
     // Считывание данных
     let companyData = request.body;
     // Создание хэша пароля
