@@ -12,6 +12,7 @@ export class PropertyType extends ModelBase {
         "id",
         "name",
         "parent_id",
+        "company_id",
         "created_at",
         "updated_at",
       ],
@@ -19,6 +20,7 @@ export class PropertyType extends ModelBase {
       fillable: [
         "name",
         "parent_id",
+        "company_id",
         "created_at",
         "updated_at",
       ],
@@ -26,6 +28,7 @@ export class PropertyType extends ModelBase {
         "id",
         "name",
         "parent_id",
+        "company_id",
         "created_at",
         "updated_at",
       ],
