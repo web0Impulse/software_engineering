@@ -47,21 +47,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработка отправки формы
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        errorDiv.classList.remove('visible');
+        errorDiv.innerHTML = "";
 
+        // Поля формы
+        const companyName = document.getElementById('company-name').value;
+        const login = document.getElementById('login').value;
+        const password = passwordInput.value;
         // Проверка совпадения паролей перед отправкой
         if (passwordInput.value !== confirmPasswordInput.value) {
             passwordMatchMessage.classList.add('visible');
             confirmPasswordInput.focus();
             return;
         }
-
+        // Проверка на пустые поля
+        if (companyName == "") {
+          errorDiv.classList.add('visible');
+          errorDiv.innerHTML = "<p>Название компании не должно быть пустым</p>";
+          return;
+        }
+        if (login == "") {
+          errorDiv.classList.add('visible');
+          errorDiv.innerHTML = "<p>Логин не должен быть пустым</p>";
+          return;
+        }
+        if (password == "") {
+          errorDiv.classList.add('visible');
+          errorDiv.innerHTML = "<p>Пароль не должен быть пустым</p>";
+          return;
+        }
         // Сбор данных формы
         const formData = {
-            company_name: document.getElementById('company_name').value,
-            login: document.getElementById('login').value,
-            password: passwordInput.value
+            company_name: companyName,
+            login: login,
+            password: password
         };
-        fetch('/signup', {
+        fetch('/api/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,10 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then((json) => {
           if (json.status != 201) {
             errorDiv.classList.add('visible');
-            errorDiv.innerText = json.message;
+            errorDiv.innerHTML = json.message;
           } else {
             errorDiv.classList.remove('visible');
-            errorDiv.innerText = "";
+            errorDiv.innerHTML = "";
             window.location.href = "/";
           }
         });
