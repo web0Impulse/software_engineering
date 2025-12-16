@@ -89,25 +89,50 @@ export class PropertyTypeController {
             errors: errors.array(),
         }, response);
     }
+
     // Считывание данных
     const requestData = request.body;
+
+    // Проверка по parent_id
+    const propertyType = new PropertyType();
+    if (requestData.parent_id) {
+        propertyType.getAll("WHERE id = ? AND company_id = ?", [requestData.parent_id, request.session.user.id])
+            .then((result) => {
+                if (!propertyType.values.length) {
+                    throw {
+                        code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                        message: "Property type с таким ID не найдено",
+                    }
+                }
+            })
+            .catch(err => {
+                databaseErrorHandler(err, response);
+            })
+    }
+
+    // Сбор данных
     const updPropTypeObj = {};
+    console.log(requestData);
     if (requestData.name) {
         updPropTypeObj.name = requestData.name;
     }
-    if (requestData.parent_id) {
+    if (requestData.parent_id || requestData.parent_id === null) {
         updPropTypeObj.parent_id = requestData.parent_id;
     }
-    if (requestData.created_at) {
-        updPropTypeObj.created_at = requestData.created_at;
-    }
-    if (requestData.updated_at) {
-        updPropTypeObj.updated_at = requestData.updated_at;
-    }
+    console.log(updPropTypeObj);
+    // if (requestData.created_at) {
+    //     updPropTypeObj.created_at = requestData.created_at;
+    // }
+    // if (requestData.updated_at) {
+    //     updPropTypeObj.updated_at = requestData.updated_at;
+    // }
     // Запись изменений в БД
-    // TODO: добавить проверку по parent_id
-    const propertyType = new PropertyType();
-    propertyType.getAll("WHERE id = ?", request.params["id"])
+    propertyType.getAll(
+        "WHERE id = ? AND company_id = ?", 
+        [
+            request.params["id"],
+            request.session.user.id
+        ])
         .then(() => {
             if (!propertyType.values.length) {
                 throw {
@@ -115,10 +140,12 @@ export class PropertyTypeController {
                     message: "Типа имущества с таким ID не найдено",
                 }
             }
-            
+            if (!updPropTypeObj.parent_id && updPropTypeObj.parent_id !== null) {
+                updPropTypeObj.parent_id = propertyType.values[0].parent_id;
+            }
             propertyType.update(updPropTypeObj)
                 .then(() => {
-                    propertyType.getAll("WHERE id = ?", request.params["id"])
+                    propertyType.getAll("WHERE id = ? AND company_id = ?", [request.params["id"], request.session.user.id])
                         .then((result) => {
                             return response
                                 .status(200)
@@ -130,7 +157,6 @@ export class PropertyTypeController {
                 })
         })
         .catch((err) => {
-            console.log(err);
             databaseErrorHandler(err, response);
         });
   }
