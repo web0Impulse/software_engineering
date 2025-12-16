@@ -206,7 +206,7 @@ export class ModelBase {
     let fillableSql = "";
     let fillableDataKeys = [];
     const fillableDataValues = [];
-
+    // TODO: добавить обновление updated_at
     if (this.fillable.length > 0) {
       dataKeysList.forEach((key, i) => {
         if (this.fillable.includes(key)) {
