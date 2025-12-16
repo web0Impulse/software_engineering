@@ -80,20 +80,9 @@ export class ShipController {
     if (requestData.name) {
         updShipObj.name = requestData.name;
     }
-    if (requestData.company_id) {
-        updShipObj.company_id = requestData.company_id;
-    }
-    if (requestData.created_at) {
-        updShipObj.created_at = requestData.created_at;
-    }
-    if (requestData.updated_at) {
-        updShipObj.updated_at = requestData.updated_at;
-    }
     // Внесение нового корябля в БД
-    // TODO: вернуть токен или сессию
-    // TODO: добавить проверку по company_id
     const ship = new Ship();
-    ship.getAll("WHERE id = ?", request.params["id"])
+    ship.getAll("WHERE id = ? AND company_id = ?", [request.params["id"], request.session.user.id])
         .then(() => {
             if (!ship.values.length) {
                 throw {
