@@ -45,12 +45,30 @@ export class PropertyTypeController {
 
     // Считывание данных
     const propertyTypeData = request.body;
-    // Внесение propertyType в БД
-    // TODO: добавить проверку по parent_id
+    // проверка по parent_id
     const propertyType = new PropertyType();
+    if (propertyTypeData.parent_id) {
+        propertyType.getAll("WHERE id = ? AND company_id = ?", [propertyTypeData.parent_id, request.session.user.id])
+            .then((result) => {
+                if (!propertyType.values.length) {
+                    throw {
+                        code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                        message: "Property type с таким ID не найдено",
+                    }
+                }
+            })
+            .catch(err => {
+                databaseErrorHandler(err, response);
+            })
+    } else {
+        propertyTypeData.parent_id = null;
+    }
+    
+    // Внесение propertyType в БД
     propertyType.create({
         name: propertyTypeData.name,
-        parent_id: propertyTypeData.parent_id || null,
+        parent_id: propertyTypeData.parent_id,
+        company_id: request.session.user.id
     }).then((result) => {
         response.status(201).json({
             status: 201,
