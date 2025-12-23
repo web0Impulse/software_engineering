@@ -190,6 +190,16 @@ textarea {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
+.error-div{
+    display: none;
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+.error-div.visible{
+  display: block;
+}
+
 .add-button {
     background: linear-gradient(135deg, #3acf67 0%, #069f53 100%);
 }
