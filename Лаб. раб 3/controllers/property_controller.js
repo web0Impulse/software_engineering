@@ -210,7 +210,6 @@ export class PropertyController {
                     if (updPropertyObj.ship_id) {
                         return ship.getAll("WHERE id = ? AND company_id = ?", [updPropertyObj.ship_id, request.session.user.id])
                             .then((result) => {
-                                console.log(result);
                                 if (!result[0]) {
                                     throw {
                                         code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
@@ -269,21 +268,33 @@ export class PropertyController {
               if (!property.values.length) {
                   throw {
                       code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
-                      message: "Типа имущества с таким ID не найдено",
+                      message: "Имущества с таким ID не найдено",
                   }
+              } else {
+                // Проверка на принадлежность компании через корабль
+                const ship = new Ship();
+                return ship.getAll("WHERE id = ? AND company_id = ?", [property.values[0].ship_id, request.session.user.id])
+                    .then((result) => {
+                        if (!result[0]) {
+                           throw {
+                                code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                                message: "Имущества с таким ID не найдено",
+                            } 
+                        } else {
+                            return property.deleteValues()
+                                .then(() => {
+                                    return response
+                                        .status(204)
+                                        .json({
+                                            status: 204
+                                        })
+                                })
+                        }
+                    })
               }
-              property.deleteValues()
-                  .then(() => {
-                      return response
-                          .status(204)
-                          .json({
-                              status: 204
-                          })
-                  })
           })
           .catch(err => {
               databaseErrorHandler(err, response);
           });
-    }
-  
+    } 
 }
