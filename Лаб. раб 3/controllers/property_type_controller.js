@@ -112,14 +112,12 @@ export class PropertyTypeController {
 
     // Сбор данных
     const updPropTypeObj = {};
-    console.log(requestData);
     if (requestData.name) {
         updPropTypeObj.name = requestData.name;
     }
     if (requestData.parent_id || requestData.parent_id === null) {
         updPropTypeObj.parent_id = requestData.parent_id;
     }
-    console.log(updPropTypeObj);
     // if (requestData.created_at) {
     //     updPropTypeObj.created_at = requestData.created_at;
     // }
@@ -172,7 +170,7 @@ export class PropertyTypeController {
         }, response);
     }
     const propertyType = new PropertyType();
-    propertyType.getAll("WHERE id = ?", request.params["id"])
+    propertyType.getAll("WHERE id = ? AND company_id = ?", [request.params["id"], request.session.user.id])
         .then(() => {
             if (!propertyType.values.length) {
                 throw {
