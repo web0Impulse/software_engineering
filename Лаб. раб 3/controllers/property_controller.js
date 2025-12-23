@@ -73,10 +73,8 @@ export class PropertyController {
   
       // Считывание данных
       const propertyData = request.body;
-      // Внесение propertyType в БД
-      // Проверка по type_id
-      const propType = new PropertyType();
-      propType.getAll("WHERE id = ?", [propertyData.type_id])
+      const property = new Property();
+      property.getAll("WHERE id = ?", [propertyData.type_id])
             .then((result) => {
                 if (!result[0]) {
                     throw {
@@ -86,14 +84,14 @@ export class PropertyController {
                 }
             })
             .then(() => {
-                // провекра по ship_id
+                // провекра принадлежности по ship_id
                 const ship = new Ship();
-                return ship.getAll("WHERE id = ? AND company_id = ?", [propertyData.ship_id, request.session.user.id])
+                return ship.getAll("WHERE id = ? AND company_id = ?", [property.values[0].ship_id, request.session.user.id])
                     .then((result) => {
                         if (!result[0]) {
                             throw {
                                 code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
-                                message: "Корабля с таким ID не найдено",
+                                message: "Имущества с таким ID не найдено",
                             }
                         }
                     })
@@ -146,6 +144,9 @@ export class PropertyController {
       if (requestData.type_id) {
           updPropertyObj.type_id = requestData.type_id;
       }
+      if (requestData.ship_id) {
+          updPropertyObj.ship_id = requestData.ship_id;
+      }
       if (requestData.quantity) {
           updPropertyObj.quantity = requestData.quantity;
       }
@@ -164,45 +165,88 @@ export class PropertyController {
       if (requestData.is_ok) {
           updPropertyObj.is_ok = requestData.is_ok;
       }
-      // Запись изменений в БД
-      // TODO: добавить проверку по type_id
+      
       const property = new Property();
-      if (property.timestamp) {
-        const now = new Date();
-        updPropertyObj.updated_at = now.toISOString().slice(0, 19).replace('T', ' ');
-      }
+    //   if (property.timestamp) {
+    //     const now = new Date();
+    //     updPropertyObj.updated_at = now.toISOString().slice(0, 19).replace('T', ' ');
+    //   }
 
       property.getAll("WHERE id = ?", request.params["id"])
           .then(() => {
               if (!property.values.length) {
                   throw {
                       code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
-                      message: "Типа имущества с таким ID не найдено",
+                      message: "Имущества с таким ID не найдено",
                   }
               }
-              // Перерасчет date_next_inspection
-              if (requestData.date_prev_inspection) {
-                  const datePrevInspectionParsed = new Date(requestData.date_prev_inspection);
-                  let dateNextInspection = new Date();
-                  if (requestData.frequency_of_inspection) {
-                    dateNextInspection = new Date(datePrevInspectionParsed.getTime() + requestData.frequency_of_inspection);
-                  } else {
-                    dateNextInspection = new Date(datePrevInspectionParsed.getTime() + property.values[0].frequency_of_inspection);
-                  }
-                  updPropertyObj.date_next_inspection = dateNextInspection;
-              }
-              property.update(updPropertyObj)
-                  .then(() => {
-                      property.getAll("WHERE id = ?", request.params["id"])
-                          .then((result) => {
-                              return response
-                                  .status(200)
-                                  .json({
-                                      status:200,
-                                      data: result[0]
-                                  })
-                          })
-                  })
+              const ship = new Ship();
+              return ship.getAll("WHERE id = ? AND company_id = ?", [property.values[0].ship_id, request.session.user.id])
+                .then((result) => {
+                    if (!result[0]) {
+                        throw {
+                            code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                            message: "Имущества с таким ID не найдено",
+                        }
+                    }
+                })
+                // Проверка на существование нового type_id если он есть
+                .then(() => {
+                    if (updPropertyObj.type_id) {
+                        const propertyType = new PropertyType();
+                        return propertyType.getAll("WHERE id = ? AND company_id = ?", [updPropertyObj.type_id, request.session.user.id])
+                            .then((result) => {
+                                if (!result[0]) {
+                                    throw {
+                                        code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                                        message: "Типа имущества с таким ID не найдено",
+                                    }
+                                }
+                            })
+                    }    
+                })
+                // Проверка на существование нового ship_id если он есть
+                .then(() => {
+                    if (updPropertyObj.ship_id) {
+                        return ship.getAll("WHERE id = ? AND company_id = ?", [updPropertyObj.ship_id, request.session.user.id])
+                            .then((result) => {
+                                console.log(result);
+                                if (!result[0]) {
+                                    throw {
+                                        code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
+                                        message: "Корабля с таким ID не найдено",
+                                    }
+                                }
+                            })
+                    }
+                })
+                // Изменение данных в БД
+                .then(() => {
+                    // Перерасчет date_next_inspection
+                    if (requestData.date_prev_inspection) {
+                        const datePrevInspectionParsed = new Date(requestData.date_prev_inspection);
+                        let dateNextInspection = new Date();
+                        if (requestData.frequency_of_inspection) {
+                            dateNextInspection = new Date(datePrevInspectionParsed.getTime() + requestData.frequency_of_inspection);
+                        } else {
+                            dateNextInspection = new Date(datePrevInspectionParsed.getTime() + property.values[0].frequency_of_inspection);
+                        }
+                        updPropertyObj.date_next_inspection = dateNextInspection;
+                    }
+
+                    return property.update(updPropertyObj)
+                        .then(() => {
+                            property.getAll("WHERE id = ?", request.params["id"])
+                                .then((result) => {
+                                    return response
+                                        .status(200)
+                                        .json({
+                                            status:200,
+                                            data: result[0]
+                                        })
+                                })
+                        })
+                })
           })
           .catch((err) => {
               databaseErrorHandler(err, response);
