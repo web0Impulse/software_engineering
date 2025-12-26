@@ -35,7 +35,6 @@ app.use(checkAuth);
 
 // определяем обработчик для главной страницы
 app.get("/", function(request, response){
-    const resultPropArr = [];
     const property = new Property();
     // ВОТ ТУТ БЫ ПРИГОДИЛСЯ JOIN
     const ship = new Ship();
