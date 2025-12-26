@@ -73,8 +73,8 @@ export class PropertyController {
   
       // Считывание данных
       const propertyData = request.body;
-      const property = new Property();
-      property.getAll("WHERE id = ?", [propertyData.type_id])
+      const propertyType = new PropertyType();
+      propertyType.getAll("WHERE id = ? AND company_id = ?", [propertyData.type_id, request.session.user.id])
             .then((result) => {
                 if (!result[0]) {
                     throw {
@@ -86,12 +86,12 @@ export class PropertyController {
             .then(() => {
                 // провекра принадлежности по ship_id
                 const ship = new Ship();
-                return ship.getAll("WHERE id = ? AND company_id = ?", [property.values[0].ship_id, request.session.user.id])
+                return ship.getAll("WHERE id = ? AND company_id = ?", [propertyData.ship_id, request.session.user.id])
                     .then((result) => {
                         if (!result[0]) {
                             throw {
                                 code: DB_ERR_CODES.ER_NO_REFERENCED_ROW,
-                                message: "Имущества с таким ID не найдено",
+                                message: "Корабля с таким ID не найдено",
                             }
                         }
                     })
