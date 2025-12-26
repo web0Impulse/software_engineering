@@ -11,6 +11,9 @@ import { PropertyTypeController } from "./controllers/property_type_controller.j
 import { checkAuth } from "./middleware/auth.js";
 import hbs from 'hbs';
 import { Property } from "./models/property_model.js";
+import { Ship } from "./models/ship_model.js";
+import { PropertyType } from "./models/property_type_model.js";
+import { databaseErrorHandler } from "./handlers/error_handler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,12 +34,40 @@ app.use(checkAuth);
 
 
 // определяем обработчик для главной страницы
-app.get("/", function(_, response){
-    // response.sendFile(__dirname + "/pages/main.html");
+app.get("/", function(request, response){
+    const resultPropArr = [];
     const property = new Property();
     property.getAll()
       .then((results) => {
-          response.render("index.hbs", {property: property});
+        const promises = results.map((prop, i) => {
+          if (property.values[i].is_ok) { property.values[i].is_ok = "ОК" }
+          else {property.values[i].is_ok = "ОК"};
+          if (property.values[i].check_mark) { property.values[i].check_mark = "Проверено" }
+          else {property.values[i].check_mark = "Не проверено"};
+          property.values[i].frequency_of_inspection = property.values[i].frequency_of_inspection / 1000 / 60 / 60 / 24;
+
+          const ship = new Ship();
+          const propertyType = new PropertyType();
+          return ship.getAll("WHERE id = ? and company_id = ?", [prop.ship_id, request.session.user.id])
+            .then((result) => {
+              if (result[0]) {
+                property.values[i].ship = result[0];
+                return propertyType.getAll("WHERE id = ? AND company_id = ?", [prop.type_id, request.session.user.id])
+                    .then((result) => {
+                      property.values[i].property_type = result[0];
+                      resultPropArr.push(property.values[i]);
+                    })
+              }
+            });
+        });
+
+        Promise.all(promises)
+          .then(() => {
+            return response.render("index.hbs", {property: resultPropArr});
+          })
+          .catch(err => {
+            databaseErrorHandler(err, response);
+          });
       });
     
 });
