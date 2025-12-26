@@ -54,7 +54,6 @@ app.get("/", function(request, response){
                                   else {prop.is_ok = "ОК"};
                                   if (prop.check_mark) { prop.check_mark = "Проверено" }
                                   else {prop.check_mark = "Не проверено"};
-                                  prop.frequency_of_inspection = prop.frequency_of_inspection / 1000 / 60 / 60 / 24;
                                   // Внедрение корабля
                                   prop.ship = ship.values.find(obj => obj.id === prop.ship_id);
                                   // Внедрение типа имущества
