@@ -28,79 +28,85 @@
             </form>
         </div>
     </div>
-    <!-- Модальное окно -->
-    {{!-- <div id="assetModal" class="modal hidden">
+    <!-- Модальное окно для добавления имущества-->
+    <div id="addPropertyModal" class="modal hidden">
         <div class="modal-content">
-            <span class="close-btn" id="closeModal">&times;</span>
-            <form id="assetForm">
-            <!-- Наименование -->
-            <div class="form-group">
-                <label for="name">Наименование</label>
-                <input type="text" class="modal-input" id="name" name="name" required>
-            </div>
+            <span class="close-btn" id="closeAddPropertyModalSign">&times;</span>
+            {{!-- Ошибка --}}
+            <div class="error-div" id="addPropertySubmitError"></div>
+            <form action="#" id="addPropertyForm">
+                <!-- Наименование -->
+                <div class="form-group">
+                    <label for="propertyName">Наименование</label>
+                    <input type="text" class="modal-input" id="propertyName" name="name" required>
+                </div>
 
-            <!-- Тип -->
-            <div class="form-group">
-                <label for="type">Тип</label>
-                <select id="type" name="type" class="modal-input" required>
-                    <option value="" disabled selected>Выберите тип</option>
-                    <option value="NULL">Без типа</option>
-                    <option value="1">Тип 1</option>
-                    <option value="2">Тип 2</option>
-                    <option value="3">Тип 3</option>
-                <!-- Дополнительные типы по необходимости -->
-                </select>
-            </div>
+                <!-- Тип -->
+                <div class="form-group">
+                    <label for="propertyType">Тип</label>
+                    <select id="propertyType" name="type_id" class="modal-input" required>
+                        <option value="" disabled selected>Выберите тип имущества</option>
+                        {{#each propTypes}}
+                            <option value="{{this.id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
 
-            <!-- Количество -->
-            <div class="form-group">
-                <label for="quantity">Кол-во</label>
-                <input type="number" class="modal-input" id="quantity" name="quantity" min="1" required>
-            </div>
+                <!-- Корабль -->
+                <div class="form-group">
+                    <label for="ship">Корабль</label>
+                    <select id="ship" name="ship_id" class="modal-input" required>
+                        <option value="" disabled selected>Выберите корабль</option>
+                        {{#each ships}}
+                            <option value="{{this.id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
 
-            <!-- Расположение -->
-            <div class="form-group">
-                <label for="location">Расположение</label>
-                <textarea id="location" class="modal-input" name="location" maxlength="250" rows="3" required></textarea>
-            </div>
+                <!-- Количество -->
+                <div class="form-group">
+                    <label for="quantity">Кол-во</label>
+                    <input type="number" class="modal-input" id="quantity" name="quantity" min="1" required>
+                </div>
 
-            <!-- Дата проверки -->
-            <div class="form-group">
-                <label for="inspectionDate">Дата проверки</label>
-                <input type="date" class="modal-input" id="inspectionDate" name="inspectionDate" required>
-            </div>
+                <!-- Расположение -->
+                <div class="form-group">
+                    <label for="location">Расположение</label>
+                    <textarea id="location" class="modal-input" name="location" maxlength="250" rows="3"></textarea>
+                </div>
 
-            <!-- Отметка о выполнении -->
-            <div class="form-group checkbox-group">
-                <input type="checkbox" id="completed" name="completed">
-                <label for="completed">Отметка о выполнении</label>
-            </div>
+                <!-- Дата проверки -->
+                <div class="form-group">
+                    <label for="prevInspectionDate">Дата предыдущей проверки</label>
+                    <input type="date" class="modal-input" id="prevInspectionDate" name="date_prev_inspection" required>
+                </div>
 
-            <!-- Периодичность проверки -->
-            <div class="form-group">
-                <label for="period">Периодичность проверки</label>
-                <select class="modal-input" id="period" name="period" required>
-                    <option value="" disabled selected>Выберите период</option>
-                    <option value="1">1 год</option>
-                    <option value="2">2 года</option>
-                    <option value="6">6 лет</option>
-                </select>
-            </div>
+                <!-- Периодичность проверки -->
+                <div class="form-group">
+                    <label for="frequencyOfInspection">Периодичность проверки(дн.)</label>
+                    <input type="number" class="modal-input" id="frequencyOfInspection" name="frequency_of_inspection" min="1" required>
+                </div>
 
-            <!-- Результат -->
-            <div class="form-group checkbox-group">
-                <input type="checkbox" id="result" name="result">
-                <label for="result">Результат</label>
-            </div>
+                <!-- Отметка о выполнении -->
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="checkMark" name="check_mark">
+                    <label for="checkMark">Отметка о выполнении</label>
+                </div>
 
-            <!-- Кнопки -->
-            <div class="form-actions">
-                <button type="submit" class="go-button add-property-button" id="savePropertyButton">Добавить</button>
-                <button type="button" class="go-button logout-button" id="cancelButton">Отмена</button>
-            </div>
+                <!-- Результат -->
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="isOk" name="is_ok">
+                    <label for="isOk">Результат</label>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="form-actions">
+                    <button type="submit" class="go-button add-button" id="savePropertyButton">Добавить</button>
+                    <button type="button" class="go-button logout-button" id="closePropertyModalButton">Отмена</button>
+                </div>
             </form>
         </div>
-    </div> --}}
+    </div>
     <div class="container">
         <div class="header">
             <h1 class="page-title" id="pageTitle">Освидетельствование имущества</h1>
