@@ -31,51 +31,51 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Обработчик для поиска по типам
-    const goButton = document.getElementById('goButton');
-    const typeSearch = document.getElementById('typeSearch');
+    // const goButton = document.getElementById('goButton');
+    // const typeSearch = document.getElementById('typeSearch');
 
-    goButton.addEventListener('click', function() {
-        const searchValue = typeSearch.value.trim();
-        if (!searchValue) return;
+    // goButton.addEventListener('click', function() {
+    //     const searchValue = typeSearch.value.trim();
+    //     if (!searchValue) return;
 
-        // Поиск соответствующего раздела
-        const targetHeader = document.querySelector(`.asset-type[data-type="${searchValue}"]`);
+    //     // Поиск соответствующего раздела
+    //     const targetHeader = document.querySelector(`.asset-type[data-type="${searchValue}"]`);
 
-        if (targetHeader) {
-            // Прокрутка к найденному разделу
-            targetHeader.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+    //     if (targetHeader) {
+    //         // Прокрутка к найденному разделу
+    //         targetHeader.scrollIntoView({
+    //             behavior: 'smooth',
+    //             block: 'start'
+    //         });
 
-            // Подсветка найденного раздела
-            targetHeader.classList.add('highlighted');
+    //         // Подсветка найденного раздела
+    //         targetHeader.classList.add('highlighted');
 
-            // Разворачивание таблицы, если она свернута
-            const container = targetHeader.closest('.table-container');
-            container.classList.remove('collapsed');
-            targetHeader.classList.remove('collapsed');
+    //         // Разворачивание таблицы, если она свернута
+    //         const container = targetHeader.closest('.table-container');
+    //         container.classList.remove('collapsed');
+    //         targetHeader.classList.remove('collapsed');
 
-            // Удаление подсветки через 2 секунды
-            setTimeout(() => {
-                targetHeader.classList.remove('highlighted');
-            }, 2000);
-        } else {
-            alert('Раздел с таким типом имущества не найден');
-        }
-    });
+    //         // Удаление подсветки через 2 секунды
+    //         setTimeout(() => {
+    //             targetHeader.classList.remove('highlighted');
+    //         }, 2000);
+    //     } else {
+    //         alert('Раздел с таким типом имущества не найден');
+    //     }
+    // });
 
     // Поиск при нажатии Enter в поле ввода
-    typeSearch.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            goButton.click();
-        }
-    });
+    // typeSearch.addEventListener('keypress', function(e) {
+    //     if (e.key === 'Enter') {
+    //         goButton.click();
+    //     }
+    // });
 
     /* Обработка модального окна создания корабля */
     const addShipModalButton = document.getElementById('addShipModalButton');
     const closeShipModalButton = document.getElementById('closeShipModalButton');
-    const closeShipModalSign = document.getElementById('closeShipModalSign')
+    const closeShipModalSign = document.getElementById('closeShipModalSign');
     const addShipModal = document.getElementById('addShipModal');
     const shipNameInput = document.getElementById("shipName");
     const addShipModalErrDiv = document.getElementById('addShipSubmitError');
@@ -138,107 +138,90 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     });
 
-    /* Обработка модального окна */
-    // const openBtn = document.getElementById('addPropertyButton');
-    // const modal = document.getElementById('assetModal');
-    // const modalForm = document.getElementById('assetForm');
-    // const closeBtn = document.getElementById('closeModal');
-    // const cancelBtn = document.getElementById('cancelButton');
+    /* Обработка модального окна добавления имущества */
+    const addPropertyModal = document.getElementById('addPropertyModal');
+    const addPropertyForm = document.getElementById('addPropertyForm');
+    const addPropertyModalButton = document.getElementById('addPropertyButton');
+    const closePropertyModalButton = document.getElementById('closePropertyModalButton');
+    const closePropertyModalSign = document.getElementById('closeAddPropertyModalSign');
+    const propertyNameInput = document.getElementById('propertyName');
+    const typeIdSelect = document.getElementById('propertyType');
+    const shipIdSelect = document.getElementById('ship');
+    const quantityInput = document.getElementById('quantity');
+    const locationInput = document.getElementById('location');
+    const datePrevInspectionInput = document.getElementById('prevInspectionDate');
+    const checkedMarkCheckbox = document.getElementById('checkMark');
+    const frequencyOfInspectionInput = document.getElementById('frequencyOfInspection');
+    const isOkCheckbox = document.getElementById('isOk');
+    const addPropertyModalErrDiv = document.getElementById('addPropertySubmitError');
+
+    // Обработка нажатия на кнопку открытия модального окна добавления имущества
+    addPropertyModalButton.addEventListener('click', () => {
+        addPropertyModal.classList.remove('hidden');
+    });
     
-    // const nameInput = document.getElementById("name");
-    // const typeIdSelect = document.getElementById("type");
-    // const quantityInput = document.getElementById("quantity");
-    // const locationInput = document.getElementById("location");
-    // const datePrevInspectionInput = document.getElementById("inspectionDate");
-    // const checkedMarkCheckbox = document.getElementById("completed");
-    // const frequencyOfInspectionInput = document.getElementById("period");
-    // const isOkCheckbox = document.getElementById("result");
+    // Обработка нажатия на кнопку закрытия модального окна добавления имущества
+    closePropertyModalButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        addPropertyModal.classList.add('hidden');
+        addPropertyForm.reset();
+    });
 
-    // openBtn.addEventListener('click', () => {
-    //     modal.classList.remove('hidden');
-    //     if (typeIdSelect.value == "NULL") {
-    //         quantityInput.attributes.removeNamedItem("required");
-    //         locationInput.attributes.removeNamedItem("required");
-    //         datePrevInspectionInput.attributes.removeNamedItem("required");
-    //         frequencyOfInspectionInput.attributes.removeNamedItem("required");
-    //     }
-    //     else {
-    //         quantityInput.required = true;
-    //         quantityInput.required = true;
-    //         locationInput.required = true;
-    //         datePrevInspectionInput.required = true;
-    //         frequencyOfInspectionInput.required = true;
-    //     }
-    // });
-
-    // closeBtn.addEventListener('click', () => {
-    //     modal.classList.add('hidden');
-    // });
-
-    // cancelBtn.addEventListener('click', () => {
-    //     modal.classList.add('hidden');
-    // });
+    closePropertyModalSign.addEventListener('click', () => {
+        addPropertyModal.classList.add('hidden');
+        addPropertyForm.reset();
+    });
 
     // Закрыть при клике вне окна
-    // window.addEventListener('click', (event) => {
-    //     if (event.target === modal) {
-    //     modal.classList.add('hidden');
-    //     }
-    // });
-    // Проверка на то является ли тип родительским
-    // typeIdSelect.addEventListener('change', function(e) {
-    //     if (typeIdSelect.value == "NULL") {
-    //         quantityInput.attributes.removeNamedItem("required");
-    //         locationInput.attributes.removeNamedItem("required");
-    //         datePrevInspectionInput.attributes.removeNamedItem("required");
-    //         frequencyOfInspectionInput.attributes.removeNamedItem("required");
-    //     }
-    //     else {
-    //         quantityInput.required = true;
-    //         quantityInput.required = true;
-    //         locationInput.required = true;
-    //         datePrevInspectionInput.required = true;
-    //         frequencyOfInspectionInput.required = true;
-    //     }
-    // });
+    window.addEventListener('click', (event) => {
+        if (event.target === addPropertyModal) {
+            addPropertyModal.classList.add('hidden');
+            addPropertyForm.reset();
+        }
+    });
 
     // // Обработка отправки формы
-    // modalForm.addEventListener('submit', function(e) {
-    //     e.preventDefault();
-    //     const d = new Date();
-    //     // Сбор данных формы
-    //     const data = {
-    //         name: nameInput.value,
-    //         type_id: parseInt(typeIdSelect.value) || 0,
-    //         quantity: parseInt(quantityInput.value) || 0,
-    //         location: locationInput.value,
-    //         date_prev_inspection: datePrevInspectionInput.value || d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(),
-    //         check_mark: checkedMarkCheckbox.checked,
-    //         frequency_of_inspection: frequencyOfInspectionInput.value * 365,
-    //         is_ok: isOkCheckbox.checked
-    //     }
-    //     fetch('/api/property', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(data)
-    //     })
-    //     .then((result) => {
-    //         quantityInput.required = true;
-    //         quantityInput.required = true;
-    //         locationInput.required = true;
-    //         datePrevInspectionInput.required = true;
-    //         frequencyOfInspectionInput.required = true;
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //     })
-    //     // Закрыть окно
-    //     modal.classList.add('hidden');
-    //     // Очистить форму при необходимости
-    //     this.reset();
-    // });
+    addPropertyForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const d = new Date();
+        // Сбор данных формы
+        const data = {
+            name: propertyNameInput.value,
+            type_id: parseInt(typeIdSelect.value),
+            ship_id: parseInt(shipIdSelect.value),
+            quantity: parseInt(quantityInput.value),
+            location: locationInput.value,
+            date_prev_inspection: datePrevInspectionInput.value,
+            check_mark: checkedMarkCheckbox.checked,
+            frequency_of_inspection: parseInt(frequencyOfInspectionInput.value),
+            is_ok: isOkCheckbox.checked
+        }
+        fetch('/api/property', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then((result) => {
+            return result.json();
+        })
+        .then((json) => {
+            // Вывести ошибки
+            if (json.status != 201) {
+                addPropertyModalErrDiv.classList.add('visible');
+                addPropertyModalErrDiv.innerHTML = json.message;
+            } else {
+                window.location.reload();
+            }
+        })
+        .catch(err => {
+            // Вывести ошибки
+            addPropertyModalErrDiv.classList.add('visible');
+            addPropertyModalErrDiv.innerHTML = "Необработанная ошибка. См. консоль";
+            console.log(err);
+        });
+    });
 
 
     // Обработка нажатия на кнопку выхода
