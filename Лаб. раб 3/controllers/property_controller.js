@@ -99,7 +99,7 @@ export class PropertyController {
                         const property = new Property();
                         // расчет dateNextInspection
                         const datePrevInspectionParsed = new Date(propertyData.date_prev_inspection);
-                        const dateNextInspection = new Date(datePrevInspectionParsed.getTime() + propertyData.frequency_of_inspection);
+                        const dateNextInspection = new Date(datePrevInspectionParsed.getTime() + (propertyData.frequency_of_inspection * 24 * 60 * 60 * 1000));
 
                         return property.create({
                             name: propertyData.name,
