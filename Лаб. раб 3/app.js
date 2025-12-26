@@ -37,39 +37,41 @@ app.use(checkAuth);
 app.get("/", function(request, response){
     const resultPropArr = [];
     const property = new Property();
-    property.getAll()
-      .then((results) => {
-        const promises = results.map((prop, i) => {
-          if (property.values[i].is_ok) { property.values[i].is_ok = "ОК" }
-          else {property.values[i].is_ok = "ОК"};
-          if (property.values[i].check_mark) { property.values[i].check_mark = "Проверено" }
-          else {property.values[i].check_mark = "Не проверено"};
-          property.values[i].frequency_of_inspection = property.values[i].frequency_of_inspection / 1000 / 60 / 60 / 24;
-
-          const ship = new Ship();
-          const propertyType = new PropertyType();
-          return ship.getAll("WHERE id = ? and company_id = ?", [prop.ship_id, request.session.user.id])
-            .then((result) => {
-              if (result[0]) {
-                property.values[i].ship = result[0];
-                return propertyType.getAll("WHERE id = ? AND company_id = ?", [prop.type_id, request.session.user.id])
-                    .then((result) => {
-                      property.values[i].property_type = result[0];
-                      resultPropArr.push(property.values[i]);
-                    })
-              }
-            });
-        });
-
-        Promise.all(promises)
-          .then(() => {
-            return response.render("index.hbs", {property: resultPropArr});
-          })
-          .catch(err => {
-            databaseErrorHandler(err, response);
-          });
+    // ВОТ ТУТ БЫ ПРИГОДИЛСЯ JOIN
+    const ship = new Ship();
+    const propertyType = new PropertyType();
+    // Получение всех кораблей компании
+    ship.getAll("WHERE company_id = ?", [request.session.user.id])
+      .then(() => {
+        // Получение всех типов имущества компании
+        return propertyType.getAll("WHERE company_id = ?", [request.session.user.id])
+                  .then(() => {
+                    // Получение всего имущества принадлежащего компании
+                    return property.getAll("WHERE ship_id IN (?)", [ship.values.map(obj => obj.id)])
+                              .then(() => {
+                                property.values.forEach((prop) => {
+                                  // Преобразование данных
+                                  if (prop.is_ok) { prop.is_ok = "ОК" }
+                                  else {prop.is_ok = "ОК"};
+                                  if (prop.check_mark) { prop.check_mark = "Проверено" }
+                                  else {prop.check_mark = "Не проверено"};
+                                  prop.frequency_of_inspection = prop.frequency_of_inspection / 1000 / 60 / 60 / 24;
+                                  // Внедрение корабля
+                                  prop.ship = ship.values.find(obj => obj.id === prop.ship_id);
+                                  // Внедрение типа имущества
+                                  prop.type = propertyType.values.find(obj => obj.id === prop.type_id);
+                                });
+                                return response.render("index.hbs", {
+                                  property: property.values,
+                                  ships: ship.values,
+                                  propTypes: propertyType.values
+                                });
+                              });
+                  });
+      })
+      .catch((err) => {
+        databaseErrorHandler(err, response);
       });
-    
 });
 
 // test
